@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "sass": "^1.86.3",
+    "sweetalert2": "^11.19.1"
+  }
+}
