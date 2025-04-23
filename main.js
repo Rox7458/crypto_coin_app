@@ -3,8 +3,8 @@ const input = document.querySelector("input");
 const form = document.querySelector("form");
 const ul = document.querySelector(".coins");
 
-let coins = [];
-
+let coins = []; // coins that  will be printed to dom
+let coinsDom = []; // coins that will be checked for deleting or not
 //! Search  button on click
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -16,6 +16,7 @@ form.addEventListener("submit", (e) => {
     });
     return;
   }
+
   getCoin();
 });
 
@@ -30,29 +31,25 @@ const getCoin = async () => {
     },
   };
 
-  try {
-    const response = await fetch(
-      `https://api.coinranking.com/v2/coins`,
-      options
-    );
+  const response = await fetch(`https://api.coinranking.com/v2/coins`, options);
+  const data = await response.json();
 
-    const data = await response.json();
+  //^ filtered data by the written text at input
+  const dataName = data.data.coins;
 
-    //^ filtered data by the written text at input
+  coins = dataName.filter((a) =>
+    a.name.toLowerCase().startsWith(input.value.toLocaleLowerCase())
+  );
 
-    const dataName = data.data.coins;
-    coins = dataName.filter((a) =>
-      a.name.toLowerCase().startsWith(input.value.toLocaleLowerCase())
-    );
-
-    printScreen();
-  } catch (error) {}
+  printScreen();
 };
 
 const printScreen = () => {
   coins.forEach((b) => {
-    ul.innerHTML += `
-    <li class="coin">
+    // indom
+    if (coinsDom.indexOf(b.name) == -1) {
+      ul.innerHTML += `
+      <li class="coin">
         <div class="remove-icon">
           <i class="fas fa-window-close"></i>
         </div>
@@ -60,7 +57,7 @@ const printScreen = () => {
           <span class="domName">${b.name}</span>
           <sup>${b.symbol}</sup>
         </h2>
-        <div class="coin-temp">$</div>
+        <div class="coin-temp">$${parseFloat(b.price).toFixed(4)}</div>
         <figure>
             <img class="coin-icon" src=${b.iconUrl}>
             <figcaption style="color:green">
@@ -68,13 +65,30 @@ const printScreen = () => {
               <span>${b.change}%</span>
             </figcaption>
         </figure>
-    </li>
-    `;
+      </li>
+      `;
+
+      coinsDom.push(b.name);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: `${b.name} already exist`,
+      });
+    }
   });
 
+  //deleting
   document.querySelectorAll(".fa-window-close").forEach((del) => {
+    //delete from dom
     del.onclick = () => {
       del.closest("li").remove();
+
+      //delete from coinDom
+      let fromCoinsDom =
+        del.parentElement.nextElementSibling.firstElementChild.innerText;
+      coinsDom.splice(coinsDom.indexOf(fromCoinsDom), 1);
     };
   });
+
+  input.value = "";
 };
