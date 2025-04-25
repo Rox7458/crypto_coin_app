@@ -5,6 +5,7 @@ const ul = document.querySelector(".coins");
 
 let coins = []; // coins that  will be printed to dom
 let coinsDom = []; // coins that will be checked for deleting or not
+
 //! Search  button on click
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -46,7 +47,7 @@ const getCoin = async () => {
 
 const printScreen = () => {
   coins.forEach((b) => {
-    // indom
+    // in dom
     if (coinsDom.indexOf(b.name) == -1) {
       ul.innerHTML += `
       <li class="coin">
@@ -60,7 +61,7 @@ const printScreen = () => {
         <div class="coin-temp">$${parseFloat(b.price).toFixed(4)}</div>
         <figure>
             <img class="coin-icon" src=${b.iconUrl}>
-            <figcaption style="color:green">
+            <figcaption >
 
               <span>${b.change}%</span>
             </figcaption>
