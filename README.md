@@ -9,6 +9,7 @@ This project showcases:
 - A flex-based layout to display content.
 - the use of scss sass for responsive design and styling.
 - fetch data from [coinranking.com](https://coinranking.com/)
+- warning from https://sweetalert2.github.io/
 
 ## Features
 
